@@ -1,0 +1,42 @@
+<div class="container-fluid">
+    <div class="clearfix">
+        <div ng-repeat="node in ctrl.nodes" class="panel panel-default" style="margin: 2px; display: inline-block; vertical-align: top;">
+            <div class="panel-heading">
+                {{node.nodeName}}
+            </div>
+            <div class="panel-body">
+                {{node.nodeStatus}}<br/>
+                {{node.healthState}}
+                <div ng-repeat="application in node.applications"
+                     class="panel panel-default"
+                     style="margin-top: 2px;">
+                    <div class="panel-heading" style="max-width: 250px;">
+                        {{application.applicationName.replace('fabric:/','')}}
+                    </div>
+                    <div class="panel-body">
+                        <div ng-repeat="service in application.services"
+                             class="panel panel-default"
+                             style="margin-top: 2px;">
+                            <div class="panel-heading" style="max-width: 250px;">
+                                {{service.serviceName.replace(application.applicationName+'/', '')}}
+                            </div>
+                            <div class="panel-body">
+                                <div ng-repeat="replica in service.replicas"
+                                     class="my-panel"
+                                     style="padding: 5px; margin-top: 2px; margin-bottom: 0px; max-width: 250px;"
+                                     ng-class="['partition-'+replica.partitionId, (replica.role =='Primary' || replica.role=='') ? 'text-primary' : 'text-muted']"
+                                     ng-mouseenter="ctrl.highlightPartition(replica.partitionId, true)"
+                                     ng-mouseleave="ctrl.highlightPartition(replica.partitionId, false)">
+                                    {{replica.role}} {{replica.replicaStatus}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>
+        Last update : {{ctrl.lastUpdate|date:'mediumTime'}}
+    </p>
+</div>

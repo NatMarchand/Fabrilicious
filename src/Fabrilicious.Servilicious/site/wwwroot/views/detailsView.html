@@ -1,0 +1,226 @@
+<div class="container">
+    <div class="page-header"><h1>Nodes</h1></div>
+    <table class="table table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th>Node Name</th>
+            <th>Host</th>
+            <th>Type</th>
+            <th>Code version</th>
+            <th>Config version</th>
+            <th>Status</th>
+            <th>Up-Time</th>
+            <th>Health</th>
+            <th>Seed Node</th>
+            <th>Upgrade Domain</th>
+            <th>Fault Domain</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="node in ctrl.nodes|orderBy:'nodeName'"
+            ng-class="healthStateToRowClass(node.healthState)">
+            <td>{{node.nodeName}}</td>
+            <td>{{node.ipAddressOrFQDN}}</td>
+            <td>{{node.nodeType}}</td>
+            <td>{{node.codeVersion}}</td>
+            <td>{{node.configVersion}}</td>
+            <td>{{node.nodeStatus}}</td>
+            <td>{{node.nodeUpTime}}</td>
+            <td>
+                <span class="label"
+                      ng-class="ctrl.healthStateToLabelClass(node.healthState)">
+                    {{node.healthState}}
+                </span>
+            </td>
+            <td><span ng-class="node.isSeedNode ? 'glyphicon-ok' : 'glyphicon-minus'" class="glyphicon"></span></td>
+            <td>{{node.upgradeDomain}}</td>
+            <td>{{node.faultDomain}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <div class="page-header">
+        <h1>Applications Types</h1>
+    </div>
+    <ul>
+        <li ng-repeat="applicationType in ctrl.applicationTypes|orderBy:'applicationTypeName'">
+            <h2>{{applicationType.applicationTypeName}} {{applicationType.applicationTypeVersion}}</h2>
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th>Manifest Name</th>
+                    <th>Manifest Version</th>
+                    <th>Type</th>
+                    <th>Kind</th>
+                    <th>Persisted</th>
+                    <th>Constraints</th>
+                    <th>Metrics</th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="serviceType in applicationType.serviceTypes|orderBy:'serviceManifestName'">
+                <tr>
+                    <td>{{serviceType.serviceManifestName}}</td>
+                    <td>{{serviceType.serviceManifestVersion}}</td>
+                    <td>{{serviceType.serviceTypeDescription.serviceTypeName}}</td>
+                    <td>
+                        <span class="label"
+                              ng-class="serviceType.serviceTypeDescription.serviceTypeKind == 'Stateful' ? 'label-success' : 'label-primary'">
+                            {{serviceType.serviceTypeDescription.serviceTypeKind}}
+                        </span>
+                    </td>
+                    <td>
+                        <span ng-class="serviceType.serviceTypeDescription.hasPersistedState ? 'glyphicon-ok' : 'glyphicon-minus'"
+                              class="glyphicon"></span>
+                    </td>
+                    <td>{{serviceType.serviceTypeDescription.placementConstraints}}</td>
+                    <td>{{serviceType.serviceTypeDescription.loadMetrics}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>Applications</h1>
+    </div>
+    <table class="table table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th colspan="2">Type</th>
+            <th colspan="3">Application</th>
+            <th colspan="1">Upgrade</th>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <th>Version</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Health</th>
+            <!--th>Parameters</th-->
+            <th>Type Version</th>
+            <!--th>Parameters</th-->
+        </tr>
+        </thead>
+        <tbody ng-repeat="application in ctrl.applications|orderBy:'applicationTypeName'">
+        <tr ng-class="ctrl.healthStateToRowClass(application.healthState)">
+            <td>{{application.applicationTypeName}}</td>
+            <td>{{application.applicationTypeVersion}}</td>
+            <td><samp class="small">{{application.applicationName}}</samp></td>
+            <td>{{application.applicationStatus}}</td>
+            <td>
+                <span class="label"
+                      ng-class="ctrl.healthStateToLabelClass(application.healthState)">{{application.healthState}}</span>
+            </td>
+            <!--td>{{application.applicationParameters}}</td-->
+            <td>{{application.upgradeTypeVersion}}</td>
+            <!--td>{{application.upgradeParameters}}</td-->
+        </tr>
+        <tr>
+            <td colspan="8">
+                <table class="table table-bordered table-condensed" style="margin: 0px;">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Type Name</th>
+                        <th>Type Version</th>
+                        <th>Name</th>
+                        <th>Kind</th>
+                        <th>Persisted</th>
+                        <th>Health</th>
+                        <th>Status</th>
+                        <th>Group</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="service in application.services|orderBy:'serviceName'">
+                    <tr ng-class="ctrl.healthStateToRowClass(service.healthState)">
+                        <td>Service</td>
+                        <td>{{service.serviceTypeName}}</td>
+                        <td>{{service.serviceManifestVersion}}</td>
+                        <td><samp class="small">{{service.serviceName}}</samp></td>
+                        <td>
+                            <span class="label"
+                                  ng-class="service.serviceKind == 'Stateful' ? 'label-success' : 'label-primary'">
+                                {{service.serviceKind}}
+                            </span>
+                        </td>
+                        <td><span ng-class="service.hasPersistedState ? 'glyphicon-ok' : 'glyphicon-minus'"
+                                  class="glyphicon"></span>
+                        </td>
+                        <td>
+                            <span class="label"
+                                  ng-class="ctrl.healthStateToLabelClass(service.healthState)">{{service.healthState}}</span>
+                        </td>
+                        <td>
+                            <span class="label"
+                                  ng-class="service.serviceStatus == 'Active' ? 'label-success' : (service.serviceStatus == 'Upgrading' ? 'label-primary' : (service.serviceStatus == 'Deleting' ? 'label-warning' : 'label-default'))">
+                                {{service.serviceStatus}}
+                            </span>
+                        </td>
+                        <td>
+                            <span ng-class="service.isServiceGroup ? 'glyphicon-ok' : 'glyphicon-minus'"
+                                  class="glyphicon"></span>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="partition in service.partitions"
+                        ng-if="service.serviceKind=='Stateless'"
+                        ng-class="ctrl.healthStateToRowClass(service.healthState)">
+                        <td>Partition</td>
+                        <td><samp class="small">{{partition.partitionInformation.id}}</samp></td>
+                        <td>{{partition.partitionInformation.kind}}</td>
+                        <td colspan="3"></td>
+                        <td>
+                            <span class="label"
+                                  ng-class="ctrl.healthStateToLabelClass(partition.healthState)">
+                                {{partition.healthState}}
+                            </span>
+                        </td>
+                        <td>{{partition.partitionStatus}}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr ng-repeat-start="partition in service.partitions|orderBy:'partitionInformation.lowKey'"
+                        ng-if="service.serviceKind=='Stateful'"
+                        ng-class="ctrl.healthStateToRowClass(partition.healthState)">
+                        <td>Partition</td>
+                        <td><samp class="small">{{partition.partitionInformation.id}}</samp></td>
+                        <td>{{partition.partitionInformation.kind}}</td>
+                        <td colspan="3">
+                            <samp class="small">{{partition.partitionInformation.lowKey}}</samp>
+                            &nbsp;&minus;&nbsp;
+                            <samp class="small">{{partition.partitionInformation.highKey}}</samp>
+                        </td>
+                        <td>
+                            <span class="label"
+                                  ng-class="ctrl.healthStateToLabelClass(partition.healthState)">
+                                {{partition.healthState}}
+                            </span>
+                        </td>
+                        <td>{{partition.partitionStatus}}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr ng-repeat="replica in partition.replicas|orderBy:'-replicaRole'"
+                        ng-class="ctrl.healthStateToRowClass(replica.healthState)">
+                        <td>Replica</td>
+                        <td><samp class="small">{{replica.id}}</samp></td>
+                        <td>{{replica.replicaRole}}</td>
+                        <td><samp class="small">{{replica.replicaAddress}}</samp></td>
+                        <td colspan="2">{{replica.nodeName}}</td>
+                        <td>
+                            <span class="label"
+                                  ng-class="ctrl.healthStateToLabelClass(replica.healthState)">
+                                {{replica.healthState}}
+                            </span>
+                        </td>
+                        <td>{{replica.replicaStatus}}</td>
+                        <td></td>
+                    </tr>
+                    <tr ng-repeat-end>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,18 @@
+.panel-body {
+    padding: 5px;
+}
+
+.panel-heading {
+    padding: 5px;
+}
+
+.panel{
+    margin-bottom: 5px;
+}
+
+.my-panel{
+    border: solid 1px #ddd;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0px 1px 1px rgba(0,0,0,0.05);
+}
