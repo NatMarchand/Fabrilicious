@@ -20,7 +20,7 @@
 
   <Resources>
     <Endpoints>
-      <Endpoint Name="ServiceEndpoint" Port="1986" />
+      <Endpoint Name="ServiceEndpoint" Type="Input" Protocol="http" Port="1986" />
     </Endpoints>
   </Resources>
 </ServiceManifest>

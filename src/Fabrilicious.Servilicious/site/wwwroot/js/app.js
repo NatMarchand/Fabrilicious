@@ -4,9 +4,9 @@
             "$routeProvider",
             function ($routeProvider) {
                 $routeProvider
-                    .when("/home", {
-                        templateUrl: "views/homeView.html",
-                        controller: "HomeController",
+                    .when("/map", {
+                        templateUrl: "views/mapView.html",
+                        controller: "MapController",
                         controllerAs: "ctrl"
                     })
                     .when("/details", {
@@ -15,7 +15,7 @@
                         controllerAs: "ctrl"
                     })
                     .otherwise({
-                        redirectTo: "/home"
+                        redirectTo: "/map"
                     });
             }
         ]);

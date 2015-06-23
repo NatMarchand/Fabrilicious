@@ -19,7 +19,7 @@ namespace Fabrilicious.Servilicious
 			Trace.WriteLine("Initialize");
 
 			var serviceEndpoint = serviceInitializationParameters.CodePackageActivationContext.GetEndpoint("ServiceEndpoint");
-			_listeningAddress = $"http://localhost:{serviceEndpoint.Port}/";
+			_listeningAddress = $"http://+:{serviceEndpoint.Port}/";
 			_publishAddress = _listeningAddress.Replace("+", FabricRuntime.GetNodeContext().IPAddressOrFQDN);
 		}
 

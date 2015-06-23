@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module("app")
-        .controller("HomeController", HomeController);
+        .controller("MapController", MapController);
 
-    function HomeController($http, $log, $interval, $document) {
+    function MapController($http, $log, $interval, $document) {
         var ctrl = this;
 
         ctrl.nodes = [];
@@ -12,7 +12,7 @@
         ctrl.lastUpdate = null;
         loadData();
 
-        ctrl.timer = $interval(loadData, 500);
+        ctrl.timer = $interval(loadData, 1000);
 
         function loadData() {
             $http.get('api/fabric/details')
